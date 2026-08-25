@@ -1,2 +1,2 @@
-# Python-Abhängigkeiten für den Pre-Commit Spellcheck Hook
+# Python dependencies for the pre-commit spellcheck hook
 codespell>=2.2.0

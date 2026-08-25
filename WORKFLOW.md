@@ -1,87 +1,87 @@
-# Workflow: Schnellkorrektur bei Rechtschreibfehlern
+# Workflow: Rapid Terminal Fixes for Spellcheck Errors
 
-Dieser Leitfaden beschreibt effiziente Terminal-Workflows, wenn der Pre-Commit-Hook (`codespell`) Rechtschreibfehler in gestageten Dokumenten meldet.
-
----
-
-## 1. Interaktive Autokorrektur mit `codespell`
-
-`codespell` bietet integrierte Optionen, um gefundene Fehler direkt im Quelltext zu beheben:
-
-### Interaktiver Korrekturmodus (Empfohlen)
-Fragt bei jedem Fund nach der passenden Korrektur:
-```bash
-codespell -i 3 -w <datei.md>
-```
-*Tastenbelegung im interaktiven Modus:*
-- `0`, `1`, `2` ... : Vorschlag auswählen
-- `i` : Wort ignorieren (für diesen Durchlauf)
-- `c` : Eigenes Wort manuell eintippen
-
-### Vollautomatische Korrektur
-Korrigiert alle eindeutigen Standard-Tippfehler automatisch:
-```bash
-codespell -w <datei.md>
-```
+This guide outlines efficient command-line workflows when the pre-commit hook (`codespell`) detects spelling mistakes in staged files.
 
 ---
 
-## 2. Direkte Terminal-Korrektur mit `sed`
+## 1. Interactive Auto-Correction with `codespell`
 
-Wenn das fehlerhafte Wort bekannt ist, kann es blitzschnell via `sed` im Terminal ersetzt werden:
+`codespell` provides built-in flags to fix detected typos directly in the source code:
 
-### Einzelne Datei korrigieren
+### Interactive Correction Mode (Recommended)
+Prompts for each finding so you can select the appropriate fix:
 ```bash
-sed -i 's/falsches_wort/richtiges_wort/g' <datei.md>
+codespell -i 3 -w <file.md>
 ```
+*Key controls in interactive mode:*
+- `0`, `1`, `2` ... : Select suggested replacement
+- `i` : Ignore word (for this run)
+- `c` : Enter custom replacement manually
 
-### Repo-weit alle Vorkommnisse ersetzen (mit `ripgrep`)
+### Fully Automated Correction
+Automatically fixes all unambiguous standard typos:
 ```bash
-rg -l 'falsches_wort' | xargs sed -i 's/falsches_wort/richtiges_wort/g'
+codespell -w <file.md>
 ```
 
 ---
 
-## 3. Fachbegriffe zur Ignore-Liste hinzufügen (False Positives)
+## 2. Direct Terminal Correction with `sed`
 
-Wird ein korrekter deutscher Fachbegriff oder Eigenname als Fehler eingestuft, trage ihn in die Ignore-Liste ein.
+When you already know the correct spelling, you can replace it quickly from the terminal:
 
-### Zur globalen Ignore-Liste (systemweit)
+### Fix a single file
 ```bash
-echo "Fachbegriff" >> ~/.config/git/codespell_ignore
+sed -i 's/misspelled_word/correct_word/g' <file.md>
 ```
 
-### Zur lokalen Ignore-Liste (nur für das aktuelle Repository)
+### Replace across the entire repository (using `ripgrep`)
 ```bash
-echo "Fachbegriff" >> .codespellignore
+rg -l 'misspelled_word' | xargs sed -i 's/misspelled_word/correct_word/g'
+```
+
+---
+
+## 3. Adding Technical Terms to the Ignore List (False Positives)
+
+If a valid technical term, library name, or proper noun is flagged as a typo, add it to your ignore list.
+
+### Global Ignore List (System-wide)
+```bash
+echo "TechnicalTerm" >> ~/.config/git/codespell_ignore
+```
+
+### Local Ignore List (Current Repository Only)
+```bash
+echo "TechnicalTerm" >> .codespellignore
 git add .codespellignore
 ```
 
 ---
 
-## 4. Re-Check & Commit abschließen
+## 4. Re-Checking & Completing the Commit
 
-Nach der Korrektur oder dem Hinzufügen zur Ignore-Liste:
+After fixing typos or updating the ignore lists:
 
 ```bash
-# 1. Geänderte Dateien erneut stagen
-git add <datei.md>
+# 1. Re-stage modified files
+git add <file.md>
 
-# 2. Hook manuell vorab testen (optional)
+# 2. Test the hook manually (optional)
 .git/hooks/pre-commit
 
-# 3. Commit regulär ausführen
-git commit -m "docs: fix spelling and update docs"
+# 3. Complete the commit
+git commit -m "docs: fix spelling and update documentation"
 ```
 
 ---
 
-## 5. Notfall-Bypass (Hook überspringen)
+## 5. Emergency Bypass (Skip Pre-Commit Hook)
 
-In dringenden Fällen oder bei absichtlichen Syntax-Ausnahmen kann der Hook übersprungen werden:
+In rare cases where an immediate commit is needed without running the verification:
 
 ```bash
 git commit --no-verify -m "commit message"
-# oder kurz:
+# or shorthand:
 git commit -n -m "commit message"
 ```
