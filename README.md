@@ -1,6 +1,6 @@
-# Git-Hook Rechtschreibprüfung
+# Git Workflow & Pre-Commit Automatisierung
 
-Automatisierter Git Pre-Commit-Hook zur Rechtschreibprüfung von Dokumentations- und Textdateien (`.md`, `.txt`, `.rst`, `.adoc`) mittels `codespell`. Unterstützt mehrsprachige Prüfungen (Deutsch & Englisch) sowie globale und projektlokale Ausnahmelisten.
+Umfassendes Git-Workflow-Toolkit mit automatisiertem Pre-Commit-Hook zur mehrsprachigen Rechtschreibprüfung (`codespell` für Deutsch & Englisch), schnellen Terminal-Korrektur-Routinen und Best Practices zur sicheren Veröffentlichung von Repositories.
 
 ---
 
