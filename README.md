@@ -69,6 +69,7 @@ When running `git commit`, the hook executes the following pipeline:
 | [`WORKFLOW.md`](file:///home/giant/.local/src/public/git-workflow/WORKFLOW.md) | Terminal reference guide for rapid spellcheck fixes |
 | [`docs/git-publishing.md`](file:///home/giant/.local/src/public/git-workflow/docs/git-publishing.md) | Comprehensive public publishing guide (English: GitHub CLI, licenses, GDPR, `.gitignore`) |
 | [`docs/git-publizierung.md`](file:///home/giant/.local/src/public/git-workflow/docs/git-publizierung.md) | Leitfaden für die Veröffentlichung von Repositories (Deutsch) |
+| [`LICENSE`](file:///home/giant/.local/src/public/git-workflow/LICENSE) | MIT Open Source License terms |
 | [`README.md`](file:///home/giant/.local/src/public/git-workflow/README.md) | Main repository documentation |
 
 ---
@@ -146,3 +147,9 @@ Before publishing code publicly to GitHub or other git hosts, review our best pr
 For the complete guide, see:
 - [English Publishing Guide](file:///home/giant/.local/src/public/git-workflow/docs/git-publishing.md)
 - [Deutscher Leitfaden zur Veröffentlichung](file:///home/giant/.local/src/public/git-workflow/docs/git-publizierung.md)
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [`LICENSE`](file:///home/giant/.local/src/public/git-workflow/LICENSE) file for details.
