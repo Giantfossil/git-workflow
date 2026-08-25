@@ -13,6 +13,7 @@ Automatisierter Git Pre-Commit-Hook zur Rechtschreibprüfung von Dokumentations-
 - [Deployment](#deployment)
 - [Konfiguration & Ausnahmelisten](#konfiguration--ausnahmelisten)
 - [Workflow zur Fehlerbehebung](#workflow-zur-fehlerbehebung)
+- [Git Repositories publizieren (Best Practices)](#git-repositories-publizieren-best-practices)
 
 ---
 
@@ -66,26 +67,35 @@ Der Ablauf beim Ausführen von `git commit` gestaltet sich wie folgt:
 | [`deployment.sh`](file:///home/giant/.local/src/public/git-hook-rechtschreibung/deployment.sh) | Installationsskript für lokales oder globales Deployment |
 | [`requirements.txt`](file:///home/giant/.local/src/public/git-hook-rechtschreibung/requirements.txt) | Python-Paketabhängigkeiten (`codespell`) |
 | [`WORKFLOW.md`](file:///home/giant/.local/src/public/git-hook-rechtschreibung/WORKFLOW.md) | Terminal-Leitfaden zur schnellen Fehlerkorrektur |
+| [`docs/git_publizieren.md`](file:///home/giant/.local/src/public/git-hook-rechtschreibung/docs/git_publizieren.md) | Leitfaden für die Veröffentlichung von Repositories (GitHub, Lizenzen, DSGVO, Gitignore) |
 | [`README.md`](file:///home/giant/.local/src/public/git-hook-rechtschreibung/README.md) | Statische Dokumentation der Hook-Infrastruktur |
 
 ---
 
 ## Voraussetzungen & Installation
 
-### 1. Systempakete (Arch Linux)
+### 1. Systempakete
 
+#### Debian / Ubuntu / Linux Mint
 ```bash
-# Basis-Paket codespell
+sudo apt update
+sudo apt install codespell
+```
+
+#### Arch Linux
+```bash
 sudo pacman -S codespell
 
-# Deutsches Wörterbuch für codespell (AUR)
+# Optional: Deutsches Wörterbuch (AUR)
 yay -S --needed codespell-dictionaries-git
 ```
 
-### 2. Python (Alternative via pip)
+### 2. Python (Alternative via pip / pipx)
 
 ```bash
 pip install -r requirements.txt
+# oder isoliert via pipx:
+# pipx install codespell
 ```
 
 ---
@@ -121,3 +131,21 @@ bash deployment.sh local
 ## Workflow zur Fehlerbehebung
 
 Eine detaillierte Anleitung zur schnellen Behebung von Rechtschreibfehlern via Terminal (interaktives `codespell -i 3 -w`, `sed`, Ignore-Listen und Bypass) ist in [`WORKFLOW.md`](file:///home/giant/.local/src/public/git-hook-rechtschreibung/WORKFLOW.md) zu finden.
+
+---
+
+## Git Repositories publizieren (Best Practices)
+
+Vor der Veröffentlichung von Repositories auf Plattformen wie GitHub sollten wesentliche Sicherheits- und Qualitätsstandards beachtet werden:
+
+1. **Datenschutz & Geheimnisse:**
+   - Keine personenbezogenen Daten (DSGVO).
+   - Keine Betriebsgeheimnisse, internen Tokens oder Passwörter im Repository.
+2. **Saubere `.gitignore`:**
+   - Ausschluss von temporären Office-, LaTeX-, Build- und Editor-Dateien (z. B. `.env`, `*.tmp`, `node_modules/`, `*.bak`).
+3. **Lizenzierung:**
+   - Bereitstellung einer passenden `LICENSE`-Datei (z. B. MIT, CC-BY-4.0).
+4. **GitHub CLI Workflow:**
+   - Schnelles Publizieren direkt über das Terminal mittels `gh repo create <NAME> --public --source=. --remote=origin --push`.
+
+Die vollständige Anleitung mit Beispielen und einer umfassenden `.gitignore`-Vorlage befindet sich in [`docs/git_publizieren.md`](file:///home/giant/.local/src/public/git-hook-rechtschreibung/docs/git_publizieren.md).
