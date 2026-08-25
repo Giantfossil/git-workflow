@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# 1. Prüfe, ob codespell installiert ist
+if ! command -v codespell >/dev/null 2>&1; then
+  echo "⚠️  WARNUNG: 'codespell' nicht gefunden. Überspringe Rechtschreibprüfung."
+  exit 0
+fi
+
+# 2. Relevante gestagete Textdateien ermitteln (sicher gegen Leerzeichen in Pfaden)
+mapfile -d '' FILES < <(git diff --cached --name-only -z --diff-filter=ACM | grep -z -E '\.(md|txt|rst|adoc)$' || true)
+
+if [ ${#FILES[@]} -eq 0 ]; then
+  exit 0
+fi
+
+# Nur Dateien prüfen, die tatsächlich auf der Festplatte existieren
+EXISTING_FILES=()
+for f in "${FILES[@]}"; do
+  [ -f "$f" ] && EXISTING_FILES+=("$f")
+done
+
+if [ ${#EXISTING_FILES[@]} -eq 0 ]; then
+  exit 0
+fi
+
+# 3. Argumente für Wörterbücher und Ignore-Dateien dynamisch aufbauen
+CODESPELL_ARGS=("--skip" ".git")
+
+# Deutsches Wörterbuch (falls vorhanden)
+DE_DICT="${HOME}/.config/git/codespell_de.txt"
+if [ -f "$DE_DICT" ]; then
+  CODESPELL_ARGS+=("--dictionary=-,${DE_DICT}")
+fi
+
+# Globale Ignore-Liste
+GLOBAL_IGNORE="${HOME}/.config/git/codespell_ignore"
+if [ -f "$GLOBAL_IGNORE" ]; then
+  CODESPELL_ARGS+=("--ignore-words=${GLOBAL_IGNORE}")
+fi
+
+# Lokale (Repo-spezifische) Ignore-Liste (falls vorhanden)
+if [ -f ".codespellignore" ]; then
+  CODESPELL_ARGS+=("--ignore-words=.codespellignore")
+elif [ -f ".codespell_ignore" ]; then
+  CODESPELL_ARGS+=("--ignore-words=.codespell_ignore")
+fi
+
+# 4. Prüfung durchführen
+echo "🔍 Prüfe Rechtschreibung mit codespell (${#EXISTING_FILES[@]} Datei(en))..."
+if ! codespell "${CODESPELL_ARGS[@]}" "${EXISTING_FILES[@]}"; then
+  echo ""
+  echo "❌ Rechtschreibfehler gefunden! Commit abgelehnt."
+  echo "💡 Tipp: Wort korrigieren oder zu ~/.config/git/codespell_ignore bzw. .codespellignore hinzufügen."
+  echo "💡 Bypass: git commit --no-verify"
+  exit 1
+fi
+
+exit 0

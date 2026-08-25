@@ -1,0 +1,2 @@
+# Python-Abhängigkeiten für den Pre-Commit Spellcheck Hook
+codespell>=2.2.0
